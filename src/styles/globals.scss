@@ -1,7 +1,21 @@
+:root {
+  --background: #1A1D23;
+  --highlight: #FF57B2;
+  --heading: #F8F8F8;
+  --body: #D7D7D7;
+
+  background-color: var(--background);
+  color: var(--body);
+  font-family: 'Inter', sans-serif;
+}
+
 * {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-// TODO
+a {
+  text-decoration: none !important;
+  color: inherit;
+}
