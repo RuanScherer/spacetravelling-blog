@@ -1,1 +1,71 @@
-// TODO
+.homePage {
+  width: 100%;
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 5rem 0;
+
+  > img {
+    display: block;
+    margin-bottom: 4rem;
+  }
+
+  .postOverview {
+    transition: .3s;
+
+    &:hover {
+      filter: brightness(.8);
+    }
+
+    .postOverviewContent {
+      display: flex;
+      flex-direction: column;
+      margin-bottom: 3rem;
+
+      h2 {
+        line-height: 2rem;
+        letter-spacing: -0.5px;
+        font-size: 1.75rem;
+        font-weight: 700;
+        text-align: justify;
+        margin-bottom: .5rem;
+        color: var(--heading);
+      }
+
+      h3 {
+        line-height: 1.375;
+        font-size: 1.125rem;
+        font-weight: 400;
+        text-align: justify;
+        margin-bottom: 1.5rem;
+      }
+
+      .postOverviewContentFooter {
+        display: flex;
+        align-items: center;
+        gap: 24px;
+
+        > div {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+      }
+    }
+  }
+
+  .carregarMaisPosts {
+    background-color: transparent;
+    border: none;
+
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--highlight);
+
+    cursor: pointer;
+    transition: .3s;
+
+    &:hover {
+      filter: brightness(.8);
+    }
+  }
+}
