@@ -42,7 +42,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
 
   return (
     <main className={styles.homePage}>
-      <img src="images/logo.svg" alt="logo" />
+      <img src="/images/logo.svg" alt="logo" />
 
       {posts.map(post => (
         <Link href={`/post/${post.uid}`} key={post.uid}>
@@ -95,7 +95,7 @@ export const getStaticProps: GetStaticProps = async () => {
       'post.author',
       'last_publication_date',
     ],
-    pageSize: 1,
+    pageSize: 3,
   });
 
   return {
@@ -105,6 +105,6 @@ export const getStaticProps: GetStaticProps = async () => {
         results: postsResponse.results,
       },
     },
-    // revalidate: 60 * 30, // 30 minutes
+    revalidate: 60 * 30, // 30 minutes
   };
 };
