@@ -1,5 +1,7 @@
 import { format } from 'date-fns';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import { RichText } from 'prismic-dom';
+import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 import Header from '../../components/Header';
 import { getPrismicClient } from '../../services/prismic';
 import styles from './post.module.scss';
@@ -26,6 +28,8 @@ interface PostProps {
 }
 
 export default function Post({ post }: PostProps): JSX.Element {
+  console.log(post.data.content);
+
   return (
     <>
       <Header />
@@ -40,22 +44,35 @@ export default function Post({ post }: PostProps): JSX.Element {
 
         <div className={styles.postDetails}>
           <div>
-            <img src="/images/calendar.svg" alt="Calendar icon" />
+            <FiCalendar />
             <span>
               {format(new Date(post.first_publication_date), 'dd/MM/yyyy')}
             </span>
           </div>
 
           <div>
-            <img src="/images/user.svg" alt="User icon" />
+            <FiUser />
             <span>{post.data.author}</span>
           </div>
 
           <div>
-            <img src="/images/clock.svg" alt="Clock icon" />
+            <FiClock />
             <span>{post.data.author}</span>
           </div>
         </div>
+
+        {post.data.content.map((content, index) => (
+          // eslint-disable-next-line react/no-array-index-key
+          <div key={index}>
+            <h2>{content.heading}</h2>
+
+            <div
+              className={styles.postContent}
+              // eslint-disable-next-line react/no-danger
+              dangerouslySetInnerHTML={{ __html: 'teste' }}
+            />
+          </div>
+        ))}
       </article>
     </>
   );
@@ -71,7 +88,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
     paths: posts.results.map(post => ({
       params: { slug: post.uid },
     })),
-    fallback: 'blocking',
+    fallback: true,
   };
 };
 
@@ -82,7 +99,19 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 
   const post = {
     first_publication_date: response.first_publication_date,
-    data: response.data,
+    data: {
+      ...response.data,
+      content: response.data.content.reduce(
+        (postContent, { heading, body }) => {
+          postContent.push({
+            heading,
+            body: RichText.asHtml(body),
+          });
+          return postContent;
+        },
+        []
+      ),
+    },
   };
 
   return {

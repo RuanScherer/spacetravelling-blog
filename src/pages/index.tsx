@@ -2,6 +2,7 @@ import { format } from 'date-fns';
 import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
+import { FiCalendar, FiUser } from 'react-icons/fi';
 import { getPrismicClient } from '../services/prismic';
 import styles from './home.module.scss';
 
@@ -53,7 +54,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
 
               <footer className={styles.postOverviewContentFooter}>
                 <div>
-                  <img src="images/calendar.svg" alt="Calendar icon" />
+                  <FiCalendar />
                   <span>
                     {format(
                       new Date(post.first_publication_date),
@@ -63,7 +64,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
                 </div>
 
                 <div>
-                  <img src="images/user.svg" alt="User icon" />
+                  <FiUser />
                   <span>{post.data.author}</span>
                 </div>
               </footer>
