@@ -58,8 +58,8 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
                   <span>
                     {format(
                       new Date(post.first_publication_date),
-                      'dd/MM/yyyy'
-                    )}
+                      'dd MMM yyyy'
+                    ).toLowerCase()}
                   </span>
                 </div>
 

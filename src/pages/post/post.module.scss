@@ -1,3 +1,12 @@
+.carregando {
+  min-width: 100vw;
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .postBanner {
   width: 100%;
   height: 400px;
@@ -31,6 +40,41 @@
       display: flex;
       align-items: center;
       gap: .5rem;
+    }
+  }
+
+  .postContentHeading {
+    margin: 2.25rem 0;
+    font-size: 2.25rem;
+    color: var(--heading);
+  }
+
+  .postContent {
+    p, li {
+      margin-bottom: 1.125rem;
+      font-size: 1.125rem;
+      line-height: 140%;
+    }
+
+    ul, ol {
+      list-style: none;
+    }
+
+    li {
+      &:before {
+        content: '●';
+        margin-right: 0.5rem;
+      }
+    }
+
+    a {
+      color: var(--highlight);
+      text-decoration: underline;
+      transition: .3s;
+
+      &:hover {
+        filter: brightness(.85);
+      }
     }
   }
 }
