@@ -7,6 +7,7 @@ import { RichText } from 'prismic-dom';
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
 import Header from '../../components/Header';
 import { getPrismicClient } from '../../services/prismic';
+import commonStyles from '../../styles/common.module.scss';
 import styles from './post.module.scss';
 
 interface Post {
@@ -58,7 +59,7 @@ export default function Post({
 
   if (router.isFallback) {
     return (
-      <main className={styles.carregando}>
+      <main className={`${commonStyles.container} ${styles.carregando}`}>
         <span>Carregando...</span>
       </main>
     );
@@ -73,7 +74,7 @@ export default function Post({
         style={{ backgroundImage: `url("${post.data.banner.url}")` }}
       />
 
-      <article className={styles.post}>
+      <article className={`${commonStyles.container} ${styles.post}`}>
         <h1>{post.data.title}</h1>
 
         <div className={styles.postDetails}>
@@ -127,10 +128,12 @@ export default function Post({
       </article>
 
       {(previousPostSuggestion || nextPostSuggestion) && (
-        <hr className={styles.footerSeparator} />
+        <div className={`${commonStyles.container}`}>
+          <hr className={styles.footerSeparator} />
+        </div>
       )}
 
-      <footer className={styles.suggestions}>
+      <footer className={`${commonStyles.container} ${styles.suggestions}`}>
         {previousPostSuggestion ? (
           <Link href={`/post/${previousPostSuggestion.uid}`}>
             <a>

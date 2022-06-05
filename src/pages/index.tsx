@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { FiCalendar, FiUser } from 'react-icons/fi';
 import { getPrismicClient } from '../services/prismic';
+import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
 
 interface Post {
@@ -42,7 +43,7 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
   }
 
   return (
-    <main className={styles.homePage}>
+    <main className={`${commonStyles.container} ${styles.homePage}`}>
       <img src="/images/logo.svg" alt="logo" />
 
       {posts.map(post => (

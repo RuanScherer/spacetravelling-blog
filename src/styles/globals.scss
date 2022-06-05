@@ -7,6 +7,18 @@
   background-color: var(--background);
   color: var(--body);
   font-family: 'Inter', sans-serif;
+
+  @media (max-width: 1080px) {
+    font-size: 93.75%;
+  }
+
+  @media (max-width: 720px) {
+    font-size: 87.75%;
+  }
+
+  @media (max-width: 425px) {
+    font-size: 81.50%;
+  }
 }
 
 * {

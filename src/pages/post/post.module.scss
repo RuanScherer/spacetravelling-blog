@@ -16,12 +16,8 @@
   background-size: cover;
 }
 
-.post, .suggestions, .footerSeparator {
-  width: 700px;
-}
-
 .post {
-  margin: 80px auto 0 auto;
+  margin: 5rem auto 0 auto;
 
   h1 {
     font-size: 3rem;
@@ -128,5 +124,9 @@
       font-weight: 600;
       color: var(--highlight);
     }
+  }
+
+  @media (max-width: 420px) {
+    grid-template-columns: 1fr;
   }
 }
