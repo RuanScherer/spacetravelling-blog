@@ -1,5 +1,7 @@
+import { predicate } from '@prismicio/client';
 import { format } from 'date-fns';
 import { GetStaticPaths, GetStaticProps } from 'next';
+import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { RichText } from 'prismic-dom';
 import { FiCalendar, FiClock, FiUser } from 'react-icons/fi';
@@ -9,6 +11,7 @@ import styles from './post.module.scss';
 
 interface Post {
   first_publication_date: string | null;
+  last_publication_date: string | null;
   data: {
     title: string;
     banner: {
@@ -24,11 +27,22 @@ interface Post {
   };
 }
 
-interface PostProps {
-  post: Post;
+interface PostSuggestion {
+  uid: string | null;
+  title: string | null;
 }
 
-export default function Post({ post }: PostProps): JSX.Element {
+interface PostProps {
+  previousPostSuggestion: PostSuggestion | null;
+  post: Post;
+  nextPostSuggestion: PostSuggestion | null;
+}
+
+export default function Post({
+  previousPostSuggestion,
+  post,
+  nextPostSuggestion,
+}: PostProps): JSX.Element {
   const router = useRouter();
 
   const postContentWordsCount = post.data.content.reduce(
@@ -82,6 +96,16 @@ export default function Post({ post }: PostProps): JSX.Element {
             <FiClock />
             <span>{readingTime} min</span>
           </div>
+
+          {post.first_publication_date !== post.last_publication_date && (
+            <i>
+              * editado em{' '}
+              {format(
+                new Date(post.first_publication_date),
+                "dd MMM yyyy', às' HH:mm"
+              ).toLowerCase()}
+            </i>
+          )}
         </div>
 
         {post.data.content.map((content, index) => {
@@ -101,6 +125,32 @@ export default function Post({ post }: PostProps): JSX.Element {
           );
         })}
       </article>
+
+      {(previousPostSuggestion || nextPostSuggestion) && (
+        <hr className={styles.footerSeparator} />
+      )}
+
+      <footer className={styles.suggestions}>
+        {previousPostSuggestion ? (
+          <Link href={`/post/${previousPostSuggestion.uid}`}>
+            <a>
+              <span>{previousPostSuggestion.title}</span>
+              <span>Post anterior</span>
+            </a>
+          </Link>
+        ) : (
+          <div />
+        )}
+
+        {nextPostSuggestion && (
+          <Link href={`/post/${nextPostSuggestion.uid}`}>
+            <a className={styles.nextPostSuggestion}>
+              <span>{nextPostSuggestion.title}</span>
+              <span>Próximo post</span>
+            </a>
+          </Link>
+        )}
+      </footer>
     </>
   );
 }
@@ -122,17 +172,59 @@ export const getStaticPaths: GetStaticPaths = async () => {
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { slug } = params;
   const prismic = getPrismicClient({});
-  const response = await prismic.getByUID('posts', String(slug));
+  const currentPost = await prismic.getByUID('posts', String(slug));
 
   const post = {
-    first_publication_date: response.first_publication_date,
-    data: response.data,
-    uid: response.uid,
+    first_publication_date: currentPost.first_publication_date,
+    last_publication_date: currentPost.last_publication_date,
+    data: currentPost.data,
+    uid: currentPost.uid,
   };
+
+  const previousPost = await prismic.get({
+    predicates: [
+      predicate.dateBefore(
+        'document.first_publication_date',
+        post.first_publication_date
+      ),
+    ],
+    orderings: ['first_publication_date desc'],
+    fetch: ['document.uid', 'document.data.title'],
+    pageSize: 1,
+  });
+  let previousPostSuggestion = null;
+  if (previousPost?.results.length > 0) {
+    const { uid, data } = previousPost.results[0];
+    previousPostSuggestion = {
+      uid,
+      title: data.title,
+    };
+  }
+
+  const nextPost = await prismic.get({
+    predicates: [
+      predicate.dateAfter(
+        'document.first_publication_date',
+        post.first_publication_date
+      ),
+    ],
+    fetch: ['document.uid', 'document.data.title'],
+    pageSize: 1,
+  });
+  let nextPostSuggestion = null;
+  if (nextPost?.results.length > 0) {
+    const { uid, data } = nextPost.results[0];
+    nextPostSuggestion = {
+      uid,
+      title: data.title,
+    };
+  }
 
   return {
     props: {
+      previousPostSuggestion,
       post,
+      nextPostSuggestion,
     },
     revalidate: 60 * 30, // 30 minutes
   };
