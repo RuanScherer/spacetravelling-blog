@@ -3,6 +3,7 @@ import { GetStaticProps } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import { FiCalendar, FiUser } from 'react-icons/fi';
+import { toast } from 'react-toastify';
 import { getPrismicClient } from '../services/prismic';
 import commonStyles from '../styles/common.module.scss';
 import styles from './home.module.scss';
@@ -38,8 +39,12 @@ export default function Home({ postsPagination }: HomeProps): JSX.Element {
       .then(({ results, next_page }) => {
         setPosts(results);
         setNextPageUrl(next_page);
-      });
-    // adicionar toast em caso de erro
+      })
+      .catch(() =>
+        toast.error(
+          'Ops! Houve um problema ao buscar mais posts. Tente novamente mais tarde.'
+        )
+      );
   }
 
   return (
