@@ -31,3 +31,13 @@ a {
   text-decoration: none !important;
   color: inherit;
 }
+
+::-webkit-scrollbar {
+  width: .5rem;
+  background-color: rgba(255, 255, 255, 0.08);
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+}
